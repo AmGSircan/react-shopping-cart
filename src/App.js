@@ -1,5 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container, Row, Col, Navbar, Nav} from 'react-bootstrap';
+import {Container, Row, Col, Navbar} from 'react-bootstrap';
+
+//Feature 1
 
 function App() {
   return (
