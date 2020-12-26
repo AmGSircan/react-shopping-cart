@@ -4,17 +4,20 @@ import {Row, Col, Navbar} from 'react-bootstrap';
 import data from './data.json';
 import Products from './components/Products';
 import Filter from './components/Filter';
+import Cart from './components/Cart';
 
 class App extends React.Component {
   constructor(){
     super();
     this.state = {
       products: data.products,
+      cartItems: [],
       size: "",
       sort: ""
     };
     this.filterProducts = this.filterProducts.bind(this);
     this.sortProducts = this.sortProducts.bind(this);
+    this.addToCart = this.addToCart.bind(this);
   }
 
   filterProducts(e){
@@ -47,8 +50,24 @@ class App extends React.Component {
     })
   }
 
+  addToCart(product){
+    const cartItems = this.state.cartItems.slice();
+    let alreadyInCart = false;
+
+    cartItems.forEach((item) => {
+      if(item._id === product._id){
+        item.count++;
+        alreadyInCart = true;
+      }
+    });
+    if(!alreadyInCart){
+      cartItems.push({...product, count: 1})
+    }
+    this.setState({cartItems})
+  }
+
   render(){
-    const listProducts = this.state.products.map((product) => <Products key={product._id} product={product} />)
+    const listProducts = this.state.products.map((product) => <Products key={product._id} product={product} addToCart={this.addToCart}/>)
     return (
       <div>
         <Navbar bg="dark" variant="dark">
@@ -65,6 +84,9 @@ class App extends React.Component {
               sortProducts={this.sortProducts}
             />
             <Row>{listProducts}</Row>
+          </Col>
+          <Col md={3}>
+            <Cart cartItems={this.state.cartItems} />
           </Col>
         </Row>
       </div>

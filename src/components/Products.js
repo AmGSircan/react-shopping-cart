@@ -19,7 +19,7 @@ export default class Products extends Component {
                             {product.description}
                         </Card.Text>
                         <div className="float-left mt-1" style={{fontSize: 20}}>{formatCurrency(product.price)}</div>
-                        <Button className="float-right" variant="primary">Add To Cart</Button>
+                        <Button onClick={() => this.props.addToCart(product)} className="float-right" variant="primary">Add To Cart</Button>
                     </Card.Body>
                 </Card>
             </Col>
