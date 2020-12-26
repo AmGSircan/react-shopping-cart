@@ -18,6 +18,7 @@ class App extends React.Component {
     this.filterProducts = this.filterProducts.bind(this);
     this.sortProducts = this.sortProducts.bind(this);
     this.addToCart = this.addToCart.bind(this);
+    this.removeFromCart = this.removeFromCart.bind(this);
   }
 
   filterProducts(e){
@@ -47,6 +48,13 @@ class App extends React.Component {
           a._id > b._id ? 1:-1
         )
       })
+    })
+  }
+
+  removeFromCart(product){
+    const cartItems = this.state.cartItems.slice()
+    this.setState({
+      cartItems: cartItems.filter(item => item._id !== product._id)
     })
   }
 
@@ -86,7 +94,7 @@ class App extends React.Component {
             <Row>{listProducts}</Row>
           </Col>
           <Col md={3}>
-            <Cart cartItems={this.state.cartItems} />
+            <Cart cartItems={this.state.cartItems} removeFromCart={this.removeFromCart} />
           </Col>
         </Row>
       </div>
