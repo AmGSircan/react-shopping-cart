@@ -1,21 +1,40 @@
 import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+import { Navbar, Button, Form } from 'react-bootstrap';
 import formatCurrency from '../util';
 import ListProductsInCart from './ListProductsInCart';
 
 export default class Cart extends Component {
     constructor(props){
         super(props);
-        this.removeFromCart = this.removeFromCart.bind(this);
+        this.state = {
+            showCheckout: false,
+            name: "",
+            email: "",
+            address: ""
+        }
     }
 
-    removeFromCart(product){
+    removeFromCart = product => {
         this.props.removeFromCart(product)
+    }
+
+    handleInput = e => {
+        this.setState({[e.target.name]: e.target.value})
+    }
+
+    createOrder = e => {
+        e.preventDefault()
+        const order = {
+            name: this.state.name,
+            email: this.state.email,
+            address: this.state.address,
+            cartItems: this.props.cartItems
+        }
+        this.props.createOrder(order)
     }
 
     render() {
         const {cartItems} = this.props;
-
         return (
             <div>
                 {cartItems.length === 0 ?
@@ -34,11 +53,40 @@ export default class Cart extends Component {
                             {formatCurrency(
                                 cartItems.reduce((a, c) => a + c.price * c.count, 0)
                             )}
-                            <Button variant="info">Proceed</Button>
+                            <Button onClick={() => this.setState({
+                                showCheckout: true
+                            })} variant="info">Proceed</Button>
                         </>
                     )
                 }
-                
+                {this.state.showCheckout && (
+                    <>
+                        <div className="dropdown-divider"></div>
+                        <Form>
+                            <Form.Group>
+                                <Form.Label>Email address</Form.Label>
+                                <Form.Control required name="email" type="email" placeholder="Enter email" onChange={this.handleInput} />
+                                <Form.Text className="text-muted">
+                                We'll never share your email with anyone else.
+                                </Form.Text>
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Enter your name</Form.Label>
+                                <Form.Control name="name" type="text" placeholder="Name" onChange={this.handleInput} />
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>Enter your address</Form.Label>
+                                <Form.Control required name="address" type="text" placeholder="Address" onChange={this.handleInput} />
+                            </Form.Group>
+
+                            <Button onClick={this.createOrder} variant="success" type="submit">
+                                Checkout
+                            </Button>
+                        </Form>
+                    </>
+                )}
             </div>
         )
     }

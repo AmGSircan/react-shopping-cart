@@ -3,9 +3,9 @@ import {Card, Button, Col} from 'react-bootstrap';
 import formatCurrency from '../util.js';
 
 export default class Products extends Component {
-    constructor(props){
-        super(props);
-    }
+    // constructor(props){
+    //     super(props);
+    // }
 
     render() {
         const product = this.props.product;
