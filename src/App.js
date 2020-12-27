@@ -11,17 +11,17 @@ class App extends React.Component {
     super();
     this.state = {
       products: data.products,
-      cartItems: [],
+      cartItems: localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [],
       size: "",
       sort: ""
     };
-    this.filterProducts = this.filterProducts.bind(this);
-    this.sortProducts = this.sortProducts.bind(this);
-    this.addToCart = this.addToCart.bind(this);
-    this.removeFromCart = this.removeFromCart.bind(this);
   }
 
-  filterProducts(e){
+  createOrder = order => {
+    alert("Need to save order for " + order.name)
+  }
+
+  filterProducts = e => {
     if(e.target.value === ""){
       this.setState({
         products: data.products,
@@ -36,7 +36,7 @@ class App extends React.Component {
     }
   }
 
-  sortProducts(e){
+  sortProducts = e => {
     const sort = e.target.value;
 
     this.setState({
@@ -51,14 +51,17 @@ class App extends React.Component {
     })
   }
 
-  removeFromCart(product){
+  removeFromCart = product => {
     const cartItems = this.state.cartItems.slice()
     this.setState({
       cartItems: cartItems.filter(item => item._id !== product._id)
     })
+    localStorage.setItem("cartItems", JSON.stringify(
+      cartItems.filter(item => item._id !== product._id)
+    ))
   }
 
-  addToCart(product){
+  addToCart = product => {
     const cartItems = this.state.cartItems.slice();
     let alreadyInCart = false;
 
@@ -72,6 +75,7 @@ class App extends React.Component {
       cartItems.push({...product, count: 1})
     }
     this.setState({cartItems})
+    localStorage.setItem("cartItems", JSON.stringify(cartItems))
   }
 
   render(){
@@ -94,7 +98,7 @@ class App extends React.Component {
             <Row>{listProducts}</Row>
           </Col>
           <Col md={3}>
-            <Cart cartItems={this.state.cartItems} removeFromCart={this.removeFromCart} />
+            <Cart createOrder={this.createOrder} cartItems={this.state.cartItems} removeFromCart={this.removeFromCart} />
           </Col>
         </Row>
       </div>
