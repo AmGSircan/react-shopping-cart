@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
 import formatCurrency from '../util';
+import { Fade } from "react-reveal";
 
 export default class ListProductsInCart extends Component {
     render() {
         const {item} = this.props;
         return (
-            <>
+            <Fade left cascade>
                 <Row>
                     <Col md={2}>
                         <img src={item.image} alt={item.title} width={50}/>
@@ -20,7 +21,7 @@ export default class ListProductsInCart extends Component {
                     </Col>
                 </Row>
                 <div className="mb-2"></div>
-            </>
+            </Fade>
         )
     }
 }
