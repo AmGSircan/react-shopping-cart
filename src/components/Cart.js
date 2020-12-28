@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, Button, Form } from 'react-bootstrap';
 import formatCurrency from '../util';
 import ListProductsInCart from './ListProductsInCart';
+import { Fade } from "react-reveal";
 
 export default class Cart extends Component {
     constructor(props){
@@ -62,29 +63,31 @@ export default class Cart extends Component {
                 {this.state.showCheckout && (
                     <>
                         <div className="dropdown-divider"></div>
-                        <Form>
-                            <Form.Group>
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control required name="email" type="email" placeholder="Enter email" onChange={this.handleInput} />
-                                <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                                </Form.Text>
-                            </Form.Group>
+                        <Fade bottom cascade>
+                            <Form>
+                                <Form.Group>
+                                    <Form.Label>Email address</Form.Label>
+                                    <Form.Control required name="email" type="email" placeholder="Enter email" onChange={this.handleInput} />
+                                    <Form.Text className="text-muted">
+                                    We'll never share your email with anyone else.
+                                    </Form.Text>
+                                </Form.Group>
 
-                            <Form.Group>
-                                <Form.Label>Enter your name</Form.Label>
-                                <Form.Control name="name" type="text" placeholder="Name" onChange={this.handleInput} />
-                            </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Enter your name</Form.Label>
+                                    <Form.Control name="name" type="text" placeholder="Name" onChange={this.handleInput} />
+                                </Form.Group>
 
-                            <Form.Group>
-                                <Form.Label>Enter your address</Form.Label>
-                                <Form.Control required name="address" type="text" placeholder="Address" onChange={this.handleInput} />
-                            </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Enter your address</Form.Label>
+                                    <Form.Control required name="address" type="text" placeholder="Address" onChange={this.handleInput} />
+                                </Form.Group>
 
-                            <Button onClick={this.createOrder} variant="success" type="submit">
-                                Checkout
-                            </Button>
-                        </Form>
+                                <Button onClick={this.createOrder} variant="success" type="submit">
+                                    Checkout
+                                </Button>
+                            </Form>
+                        </Fade>
                     </>
                 )}
             </div>
