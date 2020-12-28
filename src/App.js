@@ -1,89 +1,107 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Navbar} from 'react-bootstrap';
-import data from './data.json';
-import Products from './components/Products';
-import Filter from './components/Filter';
-import Cart from './components/Cart';
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Row, Col, Navbar } from "react-bootstrap";
+import data from "./data.json";
+import Products from "./components/Products";
+import Filter from "./components/Filter";
+import Cart from "./components/Cart";
 
 class App extends React.Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
       products: data.products,
-      cartItems: localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [],
+      cartItems: localStorage.getItem("cartItems")
+        ? JSON.parse(localStorage.getItem("cartItems"))
+        : [],
       size: "",
-      sort: ""
+      sort: "",
     };
   }
 
-  createOrder = order => {
-    alert("Need to save order for " + order.name)
-  }
+  createOrder = (order) => {
+    alert("Need to save order for " + order.name);
+  };
 
-  filterProducts = e => {
-    if(e.target.value === ""){
+  filterProducts = (e) => {
+    if (e.target.value === "") {
       this.setState({
         products: data.products,
-        size: e.target.value
-      })
-    }
-    else{
+        size: e.target.value,
+      });
+    } else {
       this.setState({
         size: e.target.value,
-        products: data.products.filter(product => product.availableSizes.indexOf(e.target.value) >= 0)
-      })
+        products: data.products.filter(
+          (product) => product.availableSizes.indexOf(e.target.value) >= 0
+        ),
+      });
     }
-  }
+  };
 
-  sortProducts = e => {
+  sortProducts = (e) => {
     const sort = e.target.value;
 
     this.setState({
       sort: sort,
       products: this.state.products.slice().sort((a, b) => {
-        return (
-          sort === "lowest" ? a.price > b.price ? 1:-1:
-          sort === "highest" ? a.price < b.price ? 1:-1:
-          a._id > b._id ? 1:-1
-        )
-      })
-    })
-  }
+        return sort === "lowest"
+          ? a.price > b.price
+            ? 1
+            : -1
+          : sort === "highest"
+          ? a.price < b.price
+            ? 1
+            : -1
+          : a._id > b._id
+          ? 1
+          : -1;
+      }),
+    });
+  };
 
-  removeFromCart = product => {
-    const cartItems = this.state.cartItems.slice()
+  removeFromCart = (product) => {
+    const cartItems = this.state.cartItems.slice();
     this.setState({
-      cartItems: cartItems.filter(item => item._id !== product._id)
-    })
-    localStorage.setItem("cartItems", JSON.stringify(
-      cartItems.filter(item => item._id !== product._id)
-    ))
-  }
+      cartItems: cartItems.filter((item) => item._id !== product._id),
+    });
+    localStorage.setItem(
+      "cartItems",
+      JSON.stringify(cartItems.filter((item) => item._id !== product._id))
+    );
+  };
 
-  addToCart = product => {
+  addToCart = (product) => {
     const cartItems = this.state.cartItems.slice();
     let alreadyInCart = false;
 
     cartItems.forEach((item) => {
-      if(item._id === product._id){
+      if (item._id === product._id) {
         item.count++;
         alreadyInCart = true;
       }
     });
-    if(!alreadyInCart){
-      cartItems.push({...product, count: 1})
+    if (!alreadyInCart) {
+      cartItems.push({ ...product, count: 1 });
     }
-    this.setState({cartItems})
-    localStorage.setItem("cartItems", JSON.stringify(cartItems))
-  }
+    this.setState({ cartItems });
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  };
 
-  render(){
-    const listProducts = this.state.products.map((product) => <Products key={product._id} product={product} addToCart={this.addToCart}/>)
+  render() {
+    const listProducts = this.state.products.map((product) => (
+      <Products
+        key={product._id}
+        product={product}
+        addToCart={this.addToCart}
+      />
+    ));
     return (
       <div>
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="#home" className="mr-auto">React Shopping Cart</Navbar.Brand>
+          <Navbar.Brand href="#home" className="mr-auto">
+            React Shopping Cart
+          </Navbar.Brand>
           <Navbar.Brand>Admin</Navbar.Brand>
         </Navbar>
         <Row>
@@ -98,7 +116,11 @@ class App extends React.Component {
             <Row>{listProducts}</Row>
           </Col>
           <Col md={3}>
-            <Cart createOrder={this.createOrder} cartItems={this.state.cartItems} removeFromCart={this.removeFromCart} />
+            <Cart
+              createOrder={this.createOrder}
+              cartItems={this.state.cartItems}
+              removeFromCart={this.removeFromCart}
+            />
           </Col>
         </Row>
       </div>
