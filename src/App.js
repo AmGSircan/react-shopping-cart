@@ -5,6 +5,8 @@ import data from "./data.json";
 import Products from "./components/Products";
 import Filter from "./components/Filter";
 import Cart from "./components/Cart";
+import { Provider } from "react-redux";
+import store from "./store";
 
 class App extends React.Component {
   constructor() {
@@ -97,7 +99,7 @@ class App extends React.Component {
       />
     ));
     return (
-      <div>
+      <Provider store={store}>
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="#home" className="mr-auto">
             React Shopping Cart
@@ -123,7 +125,7 @@ class App extends React.Component {
             />
           </Col>
         </Row>
-      </div>
+      </Provider>
     );
   }
 }
