@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Card, Button, Col, Row } from "react-bootstrap";
-import formatCurrency from "../util.js";
-import Fade from "react-reveal/Fade";
-import Zoom from "react-reveal/Zoom";
-import Modal from "react-modal";
 import { connect } from "react-redux";
 import { fetchProducts } from "../actions/productActions";
+import ListProducts from "./ListProducts";
+import Zoom from "react-reveal/Zoom";
+import Modal from "react-modal";
+import { Card, Button, Col, Row } from "react-bootstrap";
+import formatCurrency from "../util.js";
 
 class Products extends Component {
   constructor(props) {
@@ -23,41 +23,18 @@ class Products extends Component {
   closeModal = () => this.setState({ product: null });
 
   render() {
-    const product = this.props.product;
     const productModal = this.state.product;
-    return (
-      <Col md={4}>
-        <Fade bottom cascade>
-          {this.props.products ? (
-            <div>Loading...</div>
-          ) : (
-            <Card>
-              <Card.Link href="#" onClick={() => this.openModal(product)}>
-                <Card.Img
-                  variant="top"
-                  src={product.image}
-                  title={product.title}
-                />
-              </Card.Link>
-              <Card.Body>
-                <Card.Link href="#" onClick={() => this.openModal(product)}>
-                  <Card.Title>{product.title}</Card.Title>
-                </Card.Link>
-                <Card.Text>{product.description}</Card.Text>
-                <div className="float-left mt-1" style={{ fontSize: 20 }}>
-                  {formatCurrency(product.price)}
-                </div>
-                <Button
-                  onClick={() => this.props.addToCart(product)}
-                  className="float-right"
-                  variant="primary"
-                >
-                  Add To Cart
-                </Button>
-              </Card.Body>
-            </Card>
-          )}
-        </Fade>
+    return !this.props.products ? (
+      <div>Loading...</div>
+    ) : (
+      <>
+        {this.props.products.map((product) => (
+          <ListProducts
+            key={product._id}
+            product={product}
+            openModal={this.openModal}
+          />
+        ))}
         {productModal && (
           <Modal isOpen={true} onRequestClose={this.closeModal}>
             <Zoom>
@@ -104,13 +81,13 @@ class Products extends Component {
             </Zoom>
           </Modal>
         )}
-      </Col>
+      </>
     );
   }
 }
 export default connect(
   (state) => ({
-    products: state.products.items,
+    products: state.products.filteredItems,
   }),
   { fetchProducts }
 )(Products);
