@@ -6,6 +6,7 @@ import Zoom from "react-reveal/Zoom";
 import Modal from "react-modal";
 import { Card, Button, Col, Row } from "react-bootstrap";
 import formatCurrency from "../util.js";
+import { addToCart } from "../actions/cartAction";
 
 class Products extends Component {
   constructor(props) {
@@ -91,5 +92,5 @@ export default connect(
   (state) => ({
     products: state.products.filteredItems,
   }),
-  { fetchProducts }
+  { fetchProducts, addToCart }
 )(Products);
