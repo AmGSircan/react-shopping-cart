@@ -21,6 +21,7 @@ class Products extends Component {
 
   openModal = (product) => this.setState({ product });
   closeModal = () => this.setState({ product: null });
+  addToCart = (product) => this.props.addToCart(product);
 
   render() {
     const productModal = this.state.product;
@@ -33,6 +34,7 @@ class Products extends Component {
             key={product._id}
             product={product}
             openModal={this.openModal}
+            addToCart={this.addToCart}
           />
         ))}
         {productModal && (
