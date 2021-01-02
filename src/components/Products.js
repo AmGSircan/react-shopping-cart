@@ -39,7 +39,11 @@ class Products extends Component {
           />
         ))}
         {productModal && (
-          <Modal isOpen={true} onRequestClose={this.closeModal}>
+          <Modal
+            ariaHideApp={false}
+            isOpen={true}
+            onRequestClose={this.closeModal}
+          >
             <Zoom>
               <Row>
                 <Col md={6}>
