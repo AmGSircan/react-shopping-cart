@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { Navbar, Button, Form } from "react-bootstrap";
+import { Navbar, Button, Form, Row, Col, ListGroup } from "react-bootstrap";
 import formatCurrency from "../util";
 import ListProductsInCart from "./ListProductsInCart";
-import { Fade } from "react-reveal";
+import { Fade, Zoom } from "react-reveal";
 import { connect } from "react-redux";
 import { removeFromCart } from "../actions/cartAction";
+import { createOrder, clearOrder } from "../actions/orderActions";
+import Modal from "react-modal";
 
 class Cart extends Component {
   constructor(props) {
@@ -32,12 +34,17 @@ class Cart extends Component {
       email: this.state.email,
       address: this.state.address,
       cartItems: this.props.cartItems,
+      total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0),
     };
     this.props.createOrder(order);
   };
 
+  closeModal = () => {
+    this.props.clearOrder();
+  };
+
   render() {
-    const { cartItems } = this.props;
+    const { cartItems, order } = this.props;
     return (
       <div>
         {cartItems.length === 0 ? (
@@ -50,6 +57,42 @@ class Cart extends Component {
               You have {cartItems.length} in the cart
             </Navbar.Brand>
           </Navbar>
+        )}
+        {order && (
+          <Modal
+            ariaHideApp={false}
+            isOpen={true}
+            onRequestClose={this.closeModal}
+          >
+            <Zoom>
+              {console.log(order)}
+              <Row className="float-right">
+                <Button onClick={this.closeModal}>x</Button>
+              </Row>
+              <Row>
+                <Col className="text-center justify-content-center align-self-center">
+                  <h3>Your order has been placed.</h3>
+                  <h2>Order {order._id}</h2>
+                  <ListGroup>
+                    <ListGroup.Item>Name: {order.name}</ListGroup.Item>
+                    <ListGroup.Item>Email: {order.email}</ListGroup.Item>
+                    <ListGroup.Item>Address: {order.address}</ListGroup.Item>
+                    <ListGroup.Item>
+                      Total: {formatCurrency(order.total)}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      Cart Itesm:
+                      {order.cartItems.map((p, index) => (
+                        <div key={index}>
+                          {p.count} {" x "} {p.title}
+                        </div>
+                      ))}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Col>
+              </Row>
+            </Zoom>
+          </Modal>
         )}
         {cartItems.map((item) => (
           <ListProductsInCart
@@ -135,7 +178,8 @@ class Cart extends Component {
 
 export default connect(
   (state) => ({
+    order: state.order.order,
     cartItems: state.cart.cartItems,
   }),
-  { removeFromCart }
+  { removeFromCart, createOrder, clearOrder }
 )(Cart);
